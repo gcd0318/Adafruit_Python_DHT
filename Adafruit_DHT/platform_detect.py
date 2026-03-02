@@ -91,9 +91,20 @@ def pi_version():
     # Anything else is not a pi.
     with open('/proc/cpuinfo', 'r') as infile:
         cpuinfo = infile.read()
+    
+    # Add an early return since no "Hardware" line in /proc/cpuinfo for later rpios (trixie as an example for now)
+    # I only need RPI 3b1.2, so hardcoded
+    match = re.search(r'^Model\s+:\s+Raspberry Pi.*\d$', cpuinfo,
+                      flags=re.MULTILINE | re.IGNORECASE)
+    if match and ('Raspberry Pi 3 Model B Rev 1.2' in match.group(0)):
+        return 3
+
     # Match a line like 'Hardware   : BCM2709'
     match = re.search(r'^Hardware\s+:\s+(\w+)$', cpuinfo,
                       flags=re.MULTILINE | re.IGNORECASE)
+
+    print(2, match)
+
     if not match:
         # Couldn't find the hardware, assume it isn't a pi.
         return None
