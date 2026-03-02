@@ -66,7 +66,7 @@ def pi_revision():
         for line in infile:
             # Match a line of the form "Revision : 0002" while ignoring extra
             # info in front of the revsion (like 1000 when the Pi was over-volted).
-            match = re.match('Revision\s+:\s+.*(\w{4})$', line, flags=re.IGNORECASE)
+            match = re.match(r'Revision\s+:\s+.*(\w{4})$', line, flags=re.IGNORECASE)
             if match and match.group(1) in ['0000', '0002', '0003']:
                 # Return revision 1 if revision ends with 0000, 0002 or 0003.
                 return 1
@@ -92,7 +92,7 @@ def pi_version():
     with open('/proc/cpuinfo', 'r') as infile:
         cpuinfo = infile.read()
     # Match a line like 'Hardware   : BCM2709'
-    match = re.search('^Hardware\s+:\s+(\w+)$', cpuinfo,
+    match = re.search(r'^Hardware\s+:\s+(\w+)$', cpuinfo,
                       flags=re.MULTILINE | re.IGNORECASE)
     if not match:
         # Couldn't find the hardware, assume it isn't a pi.
